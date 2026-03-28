@@ -1,0 +1,137 @@
+CLASS Client (ABSTRACT)
+    ATTRIBUTES:
+        clientId = String
+        name = String
+        accounts = List of Account
+
+    METHOD addAccount(account)
+        ADD account TO accounts
+
+    METHOD getAccounts()
+        RETURN accounts
+
+    METHOD hasChequeingAccount()
+        FOR each acc IN accounts
+            IF acc IS ChequeingAccount
+            THEN RETURN true
+        RETURN false
+
+    METHOD toString()
+        RETURN clientId + name
+
+CLASS StandardClient EXTENDS Client IMPLEMENTS Maintainable
+    METHOD applyMonthlyFee()
+        FOR each acc IN accounts
+            acc.balance = acc.balance - 10
+
+CLASS StudentClient EXTENDS StandardClient
+
+CLASS IndividualClient EXTENDS StandardClient
+ // inherits fee behavior
+
+CLASS PremiumClient EXTENDS Client
+
+CLASS CorporateClient EXTENDS PremiumClient IMPLEMENTS Maintainable
+
+CLASS VIPClient EXTENDS PremiumClient
+
+CLASS Account (ABSTRACT)
+    ATTRIBUTES:
+        accountNumber = String
+        balance = double
+        owner = Client
+
+    METHOD getBalance()
+        RETURN balance
+    METHOD deposit(amount)
+        balance = balance + amount
+
+    METHOD deposit(amount, description)
+        balance = balance + amount
+    METHOD withdraw(amount)
+        IF amount > balance
+        THEN THROW InsufficientFundsException
+        ELSE
+            balance = balance - amount
+
+    METHOD transfer(targetAccount, amount)
+        IF amount > balance
+        THEN THROW InsufficientFundsException
+        ELSE
+            balance = balance - amount
+            targetAccount.deposit(amount)
+
+CLASS ChequeingAccount EXTENDS Account
+
+    METHOD addTransaction(transaction)
+        // store transaction 
+
+CLASS SavingAccount EXTENDS Account IMPLEMENTS InterestBearing
+
+    ATTRIBUTE:
+        interestRate = 0.02
+
+    METHOD applyInterest()
+        rate = interestRate
+        IF owner IS VIPClient
+        THEN rate = rate + 0.01
+        balance = balance + (balance * rate)
+
+CLASS InvestmentAccount EXTENDS Account IMPLEMENTS InterestBearing
+
+    ATTRIBUTE:
+        interestRate = 0.05
+
+    METHOD applyInterest()
+        rate = interestRate
+        IF owner IS VIPClient
+        THEN rate = rate + 0.01
+        balance = balance + (balance * rate)
+
+    OVERRIDE
+    METHOD withdraw(amount)
+        THROW Exception
+
+    METHOD chequeingTransfer(amount)
+        IF owner.hasChequeingAccount() IS FALSE
+        THEN THROW MissingChequeingAccountException
+        IF amount > balance
+        THEN THROW InsufficientFundsException
+        IF account is less than 1 year old
+        THEN THROW InvestmentLockException
+
+        balance = balance - amount
+        TRANSFER amount TO owner's ChequeingAccount
+
+CLASS Transaction
+
+    ATTRIBUTES:
+        transactionId = String
+        amount = double
+        type = String
+
+    METHOD toString()
+        RETURN transactionId + amount + type
+
+INTERFACE InterestBearing
+    METHOD applyInterest()
+
+INTERFACE Maintainable
+    METHOD applyMonthlyFee()
+
+CLASS DataManager
+
+METHOD loadClients()
+        READ data FROM JSON file
+        CONVERT to List<Client>
+        RETURN list
+
+METHOD saveClients(clients)
+        CONVERT clients TO JSON
+        WRITE to file
+
+CLASS InsufficientFundsException EXTENDS Exception
+
+CLASS MissingChequeingAccountException EXTENDS Exception
+
+CLASS InvestmentLockException EXTENDS Exception
