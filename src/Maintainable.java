@@ -1,3 +1,3 @@
 public interface Maintainable {
-    void applyMonthlyFee();
+    public void applyMonthlyFee();
 }

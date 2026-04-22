@@ -1,3 +1,3 @@
 public interface InterestBearing {
-    void applyInterest();
+    public void applyInterest();
 }
