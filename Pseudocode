@@ -1,8 +1,8 @@
-CLASS Client (ABSTRACT)
+CLASS Accounts.Client (ABSTRACT)
     ATTRIBUTES:
         clientId = String
         name = String
-        accounts = List of Account
+        accounts = List of Accounts.Account
 
     METHOD addAccount(account)
         ADD account TO accounts
@@ -12,34 +12,34 @@ CLASS Client (ABSTRACT)
 
     METHOD hasChequeingAccount()
         FOR each acc IN accounts
-            IF acc IS ChequeingAccount
+            IF acc IS Accounts.ChequeingAccount
             THEN RETURN true
         RETURN false
 
     METHOD toString()
         RETURN clientId + name
 
-CLASS StandardClient EXTENDS Client IMPLEMENTS Maintainable
+CLASS Clients.StandardClient EXTENDS Accounts.Client IMPLEMENTS Clients.Maintainable
     METHOD applyMonthlyFee()
         FOR each acc IN accounts
             acc.balance = acc.balance - 10
 
-CLASS StudentClient EXTENDS StandardClient
+CLASS Clients.StudentClient EXTENDS Clients.StandardClient
 
-CLASS IndividualClient EXTENDS StandardClient
+CLASS Clients.IndividualClient EXTENDS Clients.StandardClient
  // inherits fee behavior
 
-CLASS PremiumClient EXTENDS Client
+CLASS Clients.PremiumClient EXTENDS Accounts.Client
 
-CLASS CorporateClient EXTENDS PremiumClient IMPLEMENTS Maintainable
+CLASS Clients.CorporateClient EXTENDS Clients.PremiumClient IMPLEMENTS Clients.Maintainable
 
-CLASS VIPClient EXTENDS PremiumClient
+CLASS Clients.VIPClient EXTENDS Clients.PremiumClient
 
-CLASS Account (ABSTRACT)
+CLASS Accounts.Account (ABSTRACT)
     ATTRIBUTES:
         accountNumber = String
         balance = double
-        owner = Client
+        owner = Accounts.Client
 
     METHOD getBalance()
         RETURN balance
@@ -50,41 +50,41 @@ CLASS Account (ABSTRACT)
         balance = balance + amount
     METHOD withdraw(amount)
         IF amount > balance
-        THEN THROW InsufficientFundsException
+        THEN THROW Accounts.InsufficientFundsException
         ELSE
             balance = balance - amount
 
     METHOD transfer(targetAccount, amount)
         IF amount > balance
-        THEN THROW InsufficientFundsException
+        THEN THROW Accounts.InsufficientFundsException
         ELSE
             balance = balance - amount
             targetAccount.deposit(amount)
 
-CLASS ChequeingAccount EXTENDS Account
+CLASS Accounts.ChequeingAccount EXTENDS Accounts.Account
 
     METHOD addTransaction(transaction)
         // store transaction 
 
-CLASS SavingAccount EXTENDS Account IMPLEMENTS InterestBearing
+CLASS Accounts.SavingAccount EXTENDS Accounts.Account IMPLEMENTS Accounts.InterestBearing
 
     ATTRIBUTE:
         interestRate = 0.02
 
     METHOD applyInterest()
         rate = interestRate
-        IF owner IS VIPClient
+        IF owner IS Clients.VIPClient
         THEN rate = rate + 0.01
         balance = balance + (balance * rate)
 
-CLASS InvestmentAccount EXTENDS Account IMPLEMENTS InterestBearing
+CLASS Accounts.InvestmentAccount EXTENDS Accounts.Account IMPLEMENTS Accounts.InterestBearing
 
     ATTRIBUTE:
         interestRate = 0.05
 
     METHOD applyInterest()
         rate = interestRate
-        IF owner IS VIPClient
+        IF owner IS Clients.VIPClient
         THEN rate = rate + 0.01
         balance = balance + (balance * rate)
 
@@ -94,16 +94,16 @@ CLASS InvestmentAccount EXTENDS Account IMPLEMENTS InterestBearing
 
     METHOD chequeingTransfer(amount)
         IF owner.hasChequeingAccount() IS FALSE
-        THEN THROW MissingChequeingAccountException
+        THEN THROW Accounts.MissingChequeingAccountException
         IF amount > balance
-        THEN THROW InsufficientFundsException
+        THEN THROW Accounts.InsufficientFundsException
         IF account is less than 1 year old
-        THEN THROW InvestmentLockException
+        THEN THROW Accounts.InvestmentLockException
 
         balance = balance - amount
-        TRANSFER amount TO owner's ChequeingAccount
+        TRANSFER amount TO owner's Accounts.ChequeingAccount
 
-CLASS Transaction
+CLASS Accounts.Transaction
 
     ATTRIBUTES:
         transactionId = String
@@ -113,25 +113,25 @@ CLASS Transaction
     METHOD toString()
         RETURN transactionId + amount + type
 
-INTERFACE InterestBearing
+INTERFACE Accounts.InterestBearing
     METHOD applyInterest()
 
-INTERFACE Maintainable
+INTERFACE Clients.Maintainable
     METHOD applyMonthlyFee()
 
 CLASS DataManager
 
 METHOD loadClients()
         READ data FROM JSON file
-        CONVERT to List<Client>
+        CONVERT to List<Accounts.Client>
         RETURN list
 
 METHOD saveClients(clients)
         CONVERT clients TO JSON
         WRITE to file
 
-CLASS InsufficientFundsException EXTENDS Exception
+CLASS Accounts.InsufficientFundsException EXTENDS Exception
 
-CLASS MissingChequeingAccountException EXTENDS Exception
+CLASS Accounts.MissingChequeingAccountException EXTENDS Exception
 
-CLASS InvestmentLockException EXTENDS Exception
+CLASS Accounts.InvestmentLockException EXTENDS Exception

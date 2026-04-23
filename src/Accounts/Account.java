@@ -1,4 +1,6 @@
-public class Account {
+package Accounts;
+
+public abstract class Account {
     public String accountNumber;
     public double balance;
     public Client owner;

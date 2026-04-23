@@ -1,3 +1,5 @@
+package Accounts;
+
 import java.util.ArrayList;
 
 public abstract class Client {
@@ -5,10 +7,10 @@ public abstract class Client {
     protected String name;
     protected ArrayList<Account> accounts;
 
-    public Client(String clientID, String name) {
+    public Client(String clientID, String name, ArrayList<Account> accounts) {
         this.clientID = clientID;
         this.name = name;
-        this.accounts = new ArrayList<>();
+        this.accounts = accounts;
     }
 
     public String getClientID() {
@@ -31,6 +33,6 @@ public abstract class Client {
 
     @Override
     public String toString() {
-        return "Client{id='" + clientID + "', name='" + name + "', accounts=" + accounts.size() + "}";
+        return "Accounts.Client: id='" + clientID + "', name='" + name + "', accounts = " + accounts.size();
     }
 }
