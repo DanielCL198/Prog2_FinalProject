@@ -9,7 +9,6 @@ public class CorporateClient extends PremiumClient implements Maintainable {
         super(clientID, name, accounts);
     }
 
-    @Override
     public void applyMonthlyFee() {
         for(Account a : accounts){
             a.setBalance(a.getBalance() - 10);
