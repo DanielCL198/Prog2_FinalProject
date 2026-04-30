@@ -26,13 +26,24 @@ public abstract class Client {
     }
 
     public void addAccount(Account account) {
-        if (account != null) {
-            accounts.add(account);
+      if (account instanceof SavingAccount || account instanceof InvestmentAccount && !hasChequeingAccount()) {
+         throw new MissingChequeingAccountException("Client must have a chequeing account to open an investment account or savings account");
+      } else {
+        accounts.add(account);
+      }
+    }
+
+    public boolean hasChequeingAccount() {
+        for (Account account : accounts) {
+            if (account instanceof ChequeingAccount) {
+                return true;
+            }
         }
+        return false;
     }
 
     @Override
     public String toString() {
-        return "Accounts.Client: id='" + clientID + "', name='" + name + "', accounts = " + accounts.size();
+        return "Accounts.Client = id: " + clientID + ", name: " + name + ", accounts: " + accounts.size();
     }
 }

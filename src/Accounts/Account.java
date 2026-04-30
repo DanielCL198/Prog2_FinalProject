@@ -22,7 +22,7 @@ public abstract class Account {
     public void withdraw(double amount){
         try {
             if(amount > this.balance){
-                throw new InsufficientFundsException("Insufficient funds");
+                throw new InsufficientFundsException("Insufficient funds exception");
             }
             this.balance -= amount;
         }catch(InsufficientFundsException e){
