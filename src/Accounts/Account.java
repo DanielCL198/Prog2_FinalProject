@@ -29,6 +29,7 @@ public abstract class Account {
             System.out.println("Exception handled, withdrawal failed");
         }
     }
+
     public void transfer(Account target, double amount){
         try {
             if (amount > this.balance) {
