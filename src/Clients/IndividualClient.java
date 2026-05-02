@@ -5,8 +5,8 @@ import Accounts.Account;
 import java.util.ArrayList;
 
 public class IndividualClient extends StandardClient implements Maintainable {
-    public IndividualClient(String clientID, String name, ArrayList<Account> accounts) {
-        super(clientID, name, accounts);
+    public IndividualClient(String clientID, String name, ArrayList<Account> accounts, String password) {
+        super(clientID, name, accounts, password);
     }
 
     @Override

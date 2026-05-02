@@ -6,11 +6,13 @@ public abstract class Client {
     protected String clientID;
     protected String name;
     protected ArrayList<Account> accounts;
+    protected String password;
 
-    public Client(String clientID, String name, ArrayList<Account> accounts) {
+    public Client(String clientID, String name, ArrayList<Account> accounts, String password) {
         this.clientID = clientID;
         this.name = name;
         this.accounts = accounts;
+        this.password = password;
     }
 
     public String getClientID() {
@@ -23,6 +25,10 @@ public abstract class Client {
 
     public ArrayList<Account> getAccounts() {
         return accounts;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public void addAccount(Account account) {

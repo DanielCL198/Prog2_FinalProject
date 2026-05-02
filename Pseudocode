@@ -119,7 +119,7 @@ INTERFACE Accounts.InterestBearing
 INTERFACE Clients.Maintainable
     METHOD applyMonthlyFee()
 
-CLASS DataManager
+CLASS Accounts.DataManager
 
 METHOD loadClients()
         READ data FROM JSON file
