@@ -1,9 +1,14 @@
-package JavaFx.Bank;
+package javafx.bank;
 
 import Accounts.DataManager;
 import Accounts.Client;
-import Clients.*;
+
 import java.util.ArrayList;
+
+import Clients.CorporateClient;
+import Clients.IndividualClient;
+import Clients.StudentClient;
+import Clients.VIPClient;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -104,9 +109,7 @@ public class BankController {
             if (c.getName().equals(fullName) && c.getPassword().equals(password)) {
                 loginErrorLabel.setVisible(false);
 
-                Parent root = FXMLLoader.load(Objects.requireNonNull(
-                        getClass().getResource("/JavaFx/Bank_Scene2.fxml")
-                ));
+                Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/JavaFx/Bank_Scene2.fxml")));
                 stage = (Stage)((Node)event.getSource()).getScene().getWindow();
                 scene = new Scene(root);
                 stage.setScene(scene);

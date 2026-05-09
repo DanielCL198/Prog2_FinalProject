@@ -1,4 +1,4 @@
-package JavaFx.Bank;
+package javafx.bank;
 
 import javafx.application.Application;
 
