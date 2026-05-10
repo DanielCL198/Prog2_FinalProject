@@ -64,14 +64,10 @@ public class BankController {
             createErrorLabel.setVisible(true);
             return;
         }
-
         createErrorLabel.setVisible(false);
-
         String fullName = first + " " + last;
         String id = first + last;
-
         Client newClient;
-
         switch (type) {
             case "Corporate":
                 newClient = new CorporateClient(id, fullName, new ArrayList<>(), password);
@@ -90,8 +86,12 @@ public class BankController {
 
         clients.add(newClient);
         dataManager.saveData(clients);
+        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/JavaFx/Bank_Scene2.fxml")));
+        Parent root = loader.load();
 
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/JavaFx/Bank_Scene2.fxml")));
+        BankScene2Controller controller = loader.getController();
+        controller.setCurrentClient(newClient);
+
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
@@ -108,8 +108,11 @@ public class BankController {
         for (Client c : clients) {
             if (c.getName().equals(fullName) && c.getPassword().equals(password)) {
                 loginErrorLabel.setVisible(false);
-
-                Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/JavaFx/Bank_Scene2.fxml")));
+                FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/javafx/Bank_Scene2.fxml")));
+                Parent root = loader.load();
+                BankScene2Controller controller = loader.getController();
+                controller.setClients(clients);
+                controller.setCurrentClient(c);
                 stage = (Stage)((Node)event.getSource()).getScene().getWindow();
                 scene = new Scene(root);
                 stage.setScene(scene);

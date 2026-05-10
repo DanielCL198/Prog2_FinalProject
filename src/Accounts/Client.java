@@ -32,7 +32,7 @@ public abstract class Client {
     }
 
     public void addAccount(Account account) {
-      if (account instanceof SavingAccount || account instanceof InvestmentAccount && !hasChequeingAccount()) {
+      if ((account instanceof SavingAccount || account instanceof InvestmentAccount) && !hasChequeingAccount()) {
          throw new MissingChequeingAccountException("Client must have a chequeing account to open an investment account or savings account");
       } else {
         accounts.add(account);

@@ -3,7 +3,7 @@ package Accounts;
 public abstract class Account {
     public String accountNumber;
     public double balance;
-    public Client owner;
+    public transient Client owner;
 
     public Account(String accountNumber, double balance, Client owner) {
         this.accountNumber = accountNumber;
@@ -66,5 +66,10 @@ public abstract class Account {
 
     public void setBalance(double balance) {
         this.balance = balance;
+    }
+
+    @Override
+    public String toString() {
+        return accountNumber + " | Balance: $" + balance;
     }
 }

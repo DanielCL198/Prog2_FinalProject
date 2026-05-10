@@ -2,7 +2,33 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <AnchorPane prefHeight="545.0" prefWidth="706.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.bank.BankScene2Controller">
-   <Button fx:id="CreateAccountButton" layoutX="304.0" layoutY="168.0" mnemonicParsing="false" text="Create Account" />
+   <Pane prefHeight="546.0" prefWidth="707.0">
+      <children>
+         <Button fx:id="CreateAccountButton" layoutX="105.0" layoutY="482.0" mnemonicParsing="false" onAction="#createAccount" text="Create Account" />
+         <ListView fx:id="accountListView" layoutX="14.0" layoutY="94.0" prefHeight="337.0" prefWidth="281.0" />
+         <Label layoutX="117.0" layoutY="55.0" text="Accounts">
+            <font>
+               <Font name="System Bold" size="17.0" />
+            </font></Label>
+         <Button fx:id="CreateAccountButton1" layoutX="320.0" layoutY="108.0" mnemonicParsing="false" onAction="#withdrawButton" text="Withdraw" />
+         <Button fx:id="CreateAccountButton11" layoutX="458.0" layoutY="325.0" mnemonicParsing="false" onAction="#transactionButton" text="Create Transaction">
+            <font>
+               <Font size="13.0" />
+            </font></Button>
+         <Button fx:id="CreateAccountButton111" layoutX="322.0" layoutY="181.0" mnemonicParsing="false" onAction="#depositButton" text="Deposit" />
+         <ListView fx:id="transactionListView" layoutX="350.0" layoutY="370.0" prefHeight="159.0" prefWidth="341.0" />
+         <Label fx:id="ClientName" layoutX="525.0" layoutY="38.0">
+            <font>
+               <Font name="System Italic" size="15.0" />
+            </font></Label>
+         <Label fx:id="ClientType" layoutX="525.0" layoutY="86.0">
+            <font>
+               <Font name="System Italic" size="15.0" />
+            </font></Label>
+         <ChoiceBox fx:id="accountTypeChoice" layoutX="79.0" layoutY="443.0" prefWidth="150.0" />
+      </children>
+   </Pane>
 </AnchorPane>
