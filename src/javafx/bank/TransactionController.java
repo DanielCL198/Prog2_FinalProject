@@ -37,9 +37,9 @@ public class TransactionController {
             mainController.addTransactionMessage("Transction failed: no client selected.");
             return;
         }
-        String sendingAccountNumber = sendingAccountField.getText().trim();
-        String receivingAccountNumber = receivingAccountField.getText().trim();
-        String amountText = amountField.getText().trim();
+        String sendingAccountNumber = sendingAccountField.getText();
+        String receivingAccountNumber = receivingAccountField.getText();
+        String amountText = amountField.getText();
         if (sendingAccountNumber.isEmpty() || receivingAccountNumber.isEmpty() || amountText.isEmpty()) {
             mainController.addTransactionMessage("Transaction failed:please fill in all fields.");
             return;
@@ -69,14 +69,10 @@ public class TransactionController {
             mainController.addTransactionMessage("Transaction failed: cannot transfer money to the same account.");
             return;
         }
-
         try {
             sendingAccount.withdraw(amount);
             receivingAccount.deposit(amount);
             mainController.addTransactionMessage("Transferred $" + amount + " from " + sendingAccount.getAccountNumber() + " to " + receivingAccount.getAccountNumber());
-            if (mainController != null) {
-                mainController.refreshAccounts();
-            }
             Stage stage = (Stage) amountField.getScene().getWindow();
             stage.close();
         } catch (InsufficientFundsException e) {

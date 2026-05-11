@@ -22,6 +22,8 @@ public class DataManager {
 
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
+
+
     public void saveData(ArrayList<Client> clients) {
         JsonArray jsonArray = new JsonArray();
 
@@ -31,7 +33,7 @@ public class DataManager {
             object.addProperty("type", getClientType(client));
             object.addProperty("clientID", client.getClientID());
             object.addProperty("name", client.getName());
-            object.add("accounts", gson.toJsonTree(client.getAccounts()));
+            object.add("accounts", getJsonAccounts(client));
             object.addProperty("password", client.getPassword());
 
             jsonArray.add(object);
@@ -64,14 +66,11 @@ public class DataManager {
 
             for (JsonElement element : jsonArray) {
                 JsonObject object = element.getAsJsonObject();
-
                 String type = object.has("type") ? object.get("type").getAsString() : "Individual";
                 String clientID = object.get("clientID").getAsString();
                 String name = object.get("name").getAsString();
                 String password = object.get("password").getAsString();
-
                 Client client;
-
                 switch (type) {
                     case "Corporate":
                         client = new CorporateClient(clientID, name, new ArrayList<>(), password);
@@ -82,13 +81,12 @@ public class DataManager {
                     case "VIP":
                         client = new VIPClient(clientID, name, new ArrayList<>(), password);
                         break;
-                    case "Individual":
-
                     default:
                         client = new IndividualClient(clientID, name, new ArrayList<>(), password);
-                        break;
                 }
-
+                if (object.has("accounts") && object.get("accounts").isJsonArray()) {
+                    loadAccountsForClient(client, object.getAsJsonArray("accounts"));
+                }
                 clients.add(client);
             }
             System.out.println("Client data loaded.");
@@ -97,6 +95,18 @@ public class DataManager {
             e.printStackTrace();
         }
         return clients;
+    }
+
+    private JsonArray getJsonAccounts(Client client) {
+        JsonArray accountsArray = new JsonArray();
+        for (Account account : client.getAccounts()) {
+            JsonObject accountObject = new JsonObject();
+            accountObject.addProperty("type", getClientType(client));
+            accountObject.addProperty("accountNumber", account.getAccountNumber());
+            accountObject.addProperty("balance", account.getBalance());
+            accountsArray.add(accountObject);
+        }
+        return accountsArray;
     }
 
     private String getClientType(Client client) {
@@ -108,6 +118,45 @@ public class DataManager {
             return "VIP";
         } else {
             return "Individual";
+        }
+    }
+    private void loadAccountsForClient(Client client, JsonArray accountsArray) {
+        for (JsonElement accountElement : accountsArray) {
+            JsonObject accountObject = accountElement.getAsJsonObject();
+            String accountType = "";
+            if(accountObject.has("type")) {
+                    accountType = accountObject.get("type").getAsString();
+            }
+            else {
+                accountType = "Chequeing";
+            }
+            String accountNumber = accountObject.get("accountNumber").getAsString();
+            double balance = accountObject.get("balance").getAsDouble();
+            Account account;
+
+            switch (accountType) {
+                case "Investment":
+                    account = new InvestmentAccount(accountNumber, balance, client);
+                    break;
+                case "Savings":
+                    account = new SavingAccount(accountNumber, balance, client);
+                    break;
+                case "Chequeing":
+                default:
+                    account = new ChequeingAccount(accountNumber, balance, client);
+                    break;
+            }
+
+            client.getAccounts().add(account);
+        }
+    }
+    private String getAccountType(Account account) {
+        if (account instanceof InvestmentAccount) {
+            return "Investment";
+        } else if (account instanceof SavingAccount) {
+            return "Savings";
+        } else {
+            return "Chequeing";
         }
     }
 }

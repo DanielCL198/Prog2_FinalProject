@@ -4,7 +4,6 @@ module Prog2_FinalProject {
     requires javafx.fxml;
 
     opens javafx.bank to javafx.fxml;
-
     opens Accounts to com.google.gson;
     opens Clients to com.google.gson;
 

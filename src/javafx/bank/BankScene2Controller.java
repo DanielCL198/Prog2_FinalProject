@@ -50,19 +50,10 @@ public class BankScene2Controller {
     public void initialize() {
         accountListView.setItems(accounts);
         transactionListView.setItems(transactions);
-        ClientName.setText("Client: Not selected");
-        ClientType.setText("Type: Not selected");
+        ClientName.setText("Client: not selected");
+        ClientType.setText("Type: not selected");
         accountTypeChoice.getItems().setAll("Chequeing", "Investment", "Savings");
         accountTypeChoice.setValue("Chequeing");
-        accountListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal != null && newVal.getOwner() != null) {
-                ClientName.setText("Client: " + newVal.getOwner().getName());
-                ClientType.setText("Type: " + getClientTypeName(newVal.getOwner()));
-            } else if (currentClient != null) {
-                ClientName.setText("Client: " + currentClient.getName());
-                ClientType.setText("Type: " + getClientTypeName(currentClient));
-            }
-        });
     }
 
     public void setClients(ArrayList<Client> clients) {
@@ -71,8 +62,10 @@ public class BankScene2Controller {
 
     public void setCurrentClient(Client client) {
         if (client == null) {
-            throw new IllegalArgumentException("Current client cannot be null.");
+            transactions.add("Cannot load client: no client selected.");
+            return;
         }
+
         currentClient = client;
         ClientName.setText("Client: " + currentClient.getName());
         ClientType.setText("Type: " + getClientTypeName(currentClient));
@@ -112,10 +105,15 @@ public class BankScene2Controller {
     public void withdrawButton() {
         Account selected = accountListView.getSelectionModel().getSelectedItem();
         if (selected != null) {
-            selected.withdraw(100);
-            accountListView.refresh();
-            transactions.add("Withdrew $100 from " + selected.getAccountNumber());
-            dataManager.saveData(clients);
+            try {
+                selected.withdraw(100);
+                accountListView.refresh();
+                transactions.add("Withdrew $100 from " + selected.getAccountNumber());
+                dataManager.saveData(clients);
+            }catch(InvestmentLockException e){
+                transactions.add("Cannot withdraw: " + e.getMessage());
+                transactions.add("Exception handled, transaction failed. Must wait at least 1 year to withdraw.");
+            }
         }
     }
 
@@ -144,11 +142,6 @@ public class BankScene2Controller {
         newStage.setScene(scene);
         newStage.setTitle("Transaction");
         newStage.show();
-    }
-
-    public void refreshAccounts() {
-        accountListView.refresh();
-        dataManager.saveData(clients);
     }
 
     public void addTransactionMessage(String message) {

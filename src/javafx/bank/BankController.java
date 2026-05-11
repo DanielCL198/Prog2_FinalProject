@@ -78,20 +78,16 @@ public class BankController {
             case "Student":
                 newClient = new StudentClient(id, fullName, new ArrayList<>(), password);
                 break;
-            case "Individual":
             default:
                 newClient = new IndividualClient(id, fullName, new ArrayList<>(), password);
-                break;
         }
 
         clients.add(newClient);
         dataManager.saveData(clients);
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/JavaFx/Bank_Scene2.fxml")));
         Parent root = loader.load();
-
         BankScene2Controller controller = loader.getController();
         controller.setCurrentClient(newClient);
-
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
@@ -100,14 +96,11 @@ public class BankController {
 
     @FXML
     public void handleLogin(ActionEvent event) throws IOException {
-        String first = FirstName_Login.getText();
-        String last = LastName_Login.getText();
         String password = Password_Login.getText();
-        String fullName = first + " " + last;
+        String fullName = FirstName_Login.getText() + " " + LastName_Login.getText();
 
         for (Client c : clients) {
             if (c.getName().equals(fullName) && c.getPassword().equals(password)) {
-                loginErrorLabel.setVisible(false);
                 FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/javafx/Bank_Scene2.fxml")));
                 Parent root = loader.load();
                 BankScene2Controller controller = loader.getController();
@@ -120,7 +113,6 @@ public class BankController {
                 return;
             }
         }
-
         loginErrorLabel.setVisible(true);
     }
 }
