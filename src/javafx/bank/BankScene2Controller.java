@@ -59,11 +59,6 @@ public class BankScene2Controller {
     }
 
     public void setCurrentClient(Client client) {
-        if (client == null) {
-            transactions.add("Cannot load client: no client selected.");
-            return;
-        }
-
         currentClient = client;
         ClientName.setText("Client: " + currentClient.getName());
         ClientType.setText("Type: " + getClientTypeName(currentClient));
@@ -76,10 +71,6 @@ public class BankScene2Controller {
 
     @FXML
     public void createAccount() {
-        if (currentClient == null) {
-            transactions.add("Cannot create account: no client selected.");
-            return;
-        }
 
         Account newAccount; // initialize account
 
