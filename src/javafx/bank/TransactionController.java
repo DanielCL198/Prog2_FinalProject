@@ -1,9 +1,6 @@
 package javafx.bank;
 
-import Accounts.Account;
-import Accounts.Client;
-import Accounts.DataManager;
-import Accounts.InsufficientFundsException;
+import Accounts.*;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -80,6 +77,8 @@ public class TransactionController {
             Stage stage = (Stage) amountField.getScene().getWindow();
             stage.close();
         } catch (InsufficientFundsException e) {
+            mainController.addTransactionMessage("Transaction failed: " + e.getMessage());
+        } catch(InvestmentLockException e){
             mainController.addTransactionMessage("Transaction failed: " + e.getMessage());
         }
     }

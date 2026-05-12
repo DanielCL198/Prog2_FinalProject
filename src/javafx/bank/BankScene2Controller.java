@@ -89,6 +89,7 @@ public class BankScene2Controller {
         } else if (accountTypeChoice.getValue().equalsIgnoreCase("Savings")) {
             newAccount = new SavingAccount("SavingsACC" + (accounts.size() + 1), 1000, currentClient);
         } else {
+
             newAccount = new InvestmentAccount("InvestmentACC" + (accounts.size() + 1), 1000, currentClient);
         }
         try {
