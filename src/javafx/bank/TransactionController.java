@@ -2,6 +2,7 @@ package javafx.bank;
 
 import Accounts.Account;
 import Accounts.Client;
+import Accounts.DataManager;
 import Accounts.InsufficientFundsException;
 import javafx.application.Application;
 import javafx.fxml.FXML;
@@ -72,7 +73,10 @@ public class TransactionController {
         try { // Once account is found and amounts are withing range, proceed to deposit and withdraw as well as removing Transaction scene
             sendingAccount.withdraw(amount);
             receivingAccount.deposit(amount);
+            mainController.refreshAccounts(); // refresh AccountListView in BankScene2Controller
             mainController.addTransactionMessage("Transferred $" + amount + " from " + sendingAccount.getAccountNumber() + " to " + receivingAccount.getAccountNumber());
+            DataManager dataManager = new DataManager();
+            dataManager.saveData(mainController.getClients()); // get clients from BankScene2Controller and save to data manager
             Stage stage = (Stage) amountField.getScene().getWindow();
             stage.close();
         } catch (InsufficientFundsException e) {

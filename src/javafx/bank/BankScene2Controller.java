@@ -146,7 +146,18 @@ public class BankScene2Controller {
         newStage.show();
     }
 
+    //adds transaction message to list for TransactionController to display
     public void addTransactionMessage(String message) {
         transactions.add(message);
+    }
+
+    //refresh account list to newly saved data
+    public void refreshAccounts() {
+        accountListView.refresh();
+    }
+
+    //gets clients for transactionController
+    public ArrayList<Client> getClients() {
+        return clients;
     }
 }
