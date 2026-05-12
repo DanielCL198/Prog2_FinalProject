@@ -31,10 +31,6 @@ public class TransactionController {
 
     @FXML
     public void done() {
-        if (currentClient == null) {
-            mainController.addTransactionMessage("Transction failed: no client selected.");
-            return;
-        }
         String sendingAccountNumber = sendingAccountField.getText();
         String receivingAccountNumber = receivingAccountField.getText();
         String amountText = amountField.getText();
