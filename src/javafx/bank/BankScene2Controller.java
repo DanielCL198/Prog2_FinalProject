@@ -84,9 +84,9 @@ public class BankScene2Controller {
         Account newAccount; // initialize account
 
         // gets value of account type to be created
-        if (Objects.equals(accountTypeChoice.getValue(), "Chequeing")) {
+        if (accountTypeChoice.getValue().equalsIgnoreCase("Chequeing")) {
             newAccount = new ChequeingAccount("ChequeingACC" + (accounts.size() + 1), 1000, currentClient);
-        } else if (Objects.equals(accountTypeChoice.getValue(), "Savings")) {
+        } else if (accountTypeChoice.getValue().equalsIgnoreCase("Savings")) {
             newAccount = new SavingAccount("SavingsACC" + (accounts.size() + 1), 1000, currentClient);
         } else {
             newAccount = new InvestmentAccount("InvestmentACC" + (accounts.size() + 1), 1000, currentClient);
@@ -100,6 +100,7 @@ public class BankScene2Controller {
             transactions.add("Cannot create account: " + e.getMessage());
         }
     }
+
 
     @FXML
     public void withdrawButton() {
@@ -116,6 +117,7 @@ public class BankScene2Controller {
             }
         }
     }
+
 
     @FXML
     public void depositButton() {
