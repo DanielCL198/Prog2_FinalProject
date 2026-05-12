@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.Period;
 
 public class InvestmentAccount extends ChequeingAccount implements InterestBearing {
-    private static final double INTEREST_RATE = 0.05;
+    private static double INTEREST_RATE = 0.05;
     private String startDate = LocalDate.now().toString();
 
     public InvestmentAccount(String accountNumber, double balance, Client owner) {
@@ -17,9 +17,9 @@ public class InvestmentAccount extends ChequeingAccount implements InterestBeari
     }
 
     private boolean isLocked() {
-        LocalDate openedDate = LocalDate.parse(startDate);
-        Period period = Period.between(openedDate, LocalDate.now());
-        return(period.getYears() < 1);
+        LocalDate openedDate = LocalDate.parse(startDate); // gets the date of the account opening
+        Period period = Period.between(openedDate, LocalDate.now()); // gets the date difference between now and when it opened
+        return(period.getYears() < 1); //boolean
     }
 
     @Override

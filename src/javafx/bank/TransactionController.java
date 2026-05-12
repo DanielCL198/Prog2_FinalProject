@@ -55,8 +55,8 @@ public class TransactionController {
             mainController.addTransactionMessage("Transaction failed: amount must be greater than 0.");
             return;
         }
-        Account sendingAccount = findAccountByNumber(sendingAccountNumber);
-        Account receivingAccount = findAccountByNumber(receivingAccountNumber);
+        Account sendingAccount = findAccountByNumber(sendingAccountNumber); // gets account fullname using helper method
+        Account receivingAccount = findAccountByNumber(receivingAccountNumber); // gets receiving account fullname using helper method
         if (sendingAccount == null) {
             mainController.addTransactionMessage("Transaction failed: sending account was not found.");
             return;
@@ -69,7 +69,7 @@ public class TransactionController {
             mainController.addTransactionMessage("Transaction failed: cannot transfer money to the same account.");
             return;
         }
-        try {
+        try { // Once account is found and amounts are withing range, proceed to deposit and withdraw as well as removing Transaction scene
             sendingAccount.withdraw(amount);
             receivingAccount.deposit(amount);
             mainController.addTransactionMessage("Transferred $" + amount + " from " + sendingAccount.getAccountNumber() + " to " + receivingAccount.getAccountNumber());

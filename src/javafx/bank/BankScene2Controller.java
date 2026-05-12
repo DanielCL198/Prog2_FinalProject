@@ -42,7 +42,7 @@ public class BankScene2Controller {
 
     private Client currentClient;
 
-    private ArrayList<Client> clients;
+    private ArrayList<Client> clients = new ArrayList<>();
 
     private final DataManager dataManager = new DataManager();
 
@@ -50,8 +50,6 @@ public class BankScene2Controller {
     public void initialize() {
         accountListView.setItems(accounts);
         transactionListView.setItems(transactions);
-        ClientName.setText("Client: not selected");
-        ClientType.setText("Type: not selected");
         accountTypeChoice.getItems().setAll("Chequeing", "Investment", "Savings");
         accountTypeChoice.setValue("Chequeing");
     }
@@ -83,7 +81,9 @@ public class BankScene2Controller {
             return;
         }
 
-        Account newAccount;
+        Account newAccount; // initialize account
+
+        // gets value of account type to be created
         if (Objects.equals(accountTypeChoice.getValue(), "Chequeing")) {
             newAccount = new ChequeingAccount("ChequeingACC" + (accounts.size() + 1), 1000, currentClient);
         } else if (Objects.equals(accountTypeChoice.getValue(), "Savings")) {
@@ -92,8 +92,8 @@ public class BankScene2Controller {
             newAccount = new InvestmentAccount("InvestmentACC" + (accounts.size() + 1), 1000, currentClient);
         }
         try {
-            currentClient.addAccount(newAccount);
-            accounts.add(newAccount);
+            currentClient.addAccount(newAccount); // exception thrown in here
+            accounts.add(newAccount); // added account to list then saved immediately to data manager
             transactions.add("Created account: " + newAccount.getAccountNumber());
             dataManager.saveData(clients);
         } catch (MissingChequeingAccountException e) {
@@ -128,6 +128,8 @@ public class BankScene2Controller {
         }
     }
 
+
+    // creates transaction scene without replacing current scene
     @FXML
     public void transactionButton(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/javafx/Transaction.fxml")));

@@ -47,7 +47,7 @@ public class BankController {
     @FXML private ChoiceBox<String> clientTypeChoice;
 
     @FXML
-    public void initialize() {
+    public void initialize() { // loads all clients from Json file into clients arraylist
         clients = dataManager.loadData();
         clientTypeChoice.getItems().setAll("Individual", "Corporate", "Student", "VIP");
         clientTypeChoice.setValue("Individual");
@@ -60,14 +60,16 @@ public class BankController {
         String password = Password_create.getText();
         String type = clientTypeChoice.getValue();
 
-        if (first.isEmpty() || last.isEmpty() || password.isEmpty()) {
+        if (first.isEmpty() || last.isEmpty() || password.isEmpty()) { // lets user know about an error
             createErrorLabel.setVisible(true);
             return;
         }
         createErrorLabel.setVisible(false);
+        //initializes and declares Client info to be later saved
         String fullName = first + " " + last;
         String id = first + last;
         Client newClient;
+        //finds type of client and initializes object to its type to later save to clients arraylist and data manager Json
         switch (type) {
             case "Corporate":
                 newClient = new CorporateClient(id, fullName, new ArrayList<>(), password);
@@ -84,9 +86,11 @@ public class BankController {
 
         clients.add(newClient);
         dataManager.saveData(clients);
+        //loads the BankScene2.fxml and gets rid of the first scene
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/JavaFx/Bank_Scene2.fxml")));
         Parent root = loader.load();
         BankScene2Controller controller = loader.getController();
+        controller.setClients(clients); // passes clients onto the next controller to save.
         controller.setCurrentClient(newClient);
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(root);
@@ -99,13 +103,13 @@ public class BankController {
         String password = Password_Login.getText();
         String fullName = FirstName_Login.getText() + " " + LastName_Login.getText();
 
-        for (Client c : clients) {
+        for (Client c : clients) { // searches for the client with the inputted info above and loads the new scene if found
             if (c.getName().equals(fullName) && c.getPassword().equals(password)) {
                 FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/javafx/Bank_Scene2.fxml")));
                 Parent root = loader.load();
                 BankScene2Controller controller = loader.getController();
-                controller.setClients(clients);
-                controller.setCurrentClient(c);
+                controller.setClients(clients); // saves clients onto the controller
+                controller.setCurrentClient(c); // sets the current client to the one found
                 stage = (Stage)((Node)event.getSource()).getScene().getWindow();
                 scene = new Scene(root);
                 stage.setScene(scene);
@@ -113,6 +117,6 @@ public class BankController {
                 return;
             }
         }
-        loginErrorLabel.setVisible(true);
+        loginErrorLabel.setVisible(true); // if the client isn't found and the info doesn't match, error label shows
     }
 }

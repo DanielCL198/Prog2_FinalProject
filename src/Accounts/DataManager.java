@@ -22,8 +22,6 @@ public class DataManager {
 
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-
-
     public void saveData(ArrayList<Client> clients) {
         JsonArray jsonArray = new JsonArray();
 
@@ -51,12 +49,10 @@ public class DataManager {
     public ArrayList<Client> loadData() {
         ArrayList<Client> clients = new ArrayList<>();
         File file = new File("clients.json");
-
         if (!file.exists() || file.length() == 0) {
             saveData(clients);
             return clients;
         }
-
         try (FileReader reader = new FileReader(file)) {
             JsonElement root = JsonParser.parseReader(reader);
             if (!root.isJsonArray()) {
@@ -66,7 +62,13 @@ public class DataManager {
 
             for (JsonElement element : jsonArray) {
                 JsonObject object = element.getAsJsonObject();
-                String type = object.has("type") ? object.get("type").getAsString() : "Individual";
+                String type = "";
+                if( object.has("type")){
+                    type = object.get("type").getAsString();
+                }
+                else{
+                    type = "Individual";
+                }
                 String clientID = object.get("clientID").getAsString();
                 String name = object.get("name").getAsString();
                 String password = object.get("password").getAsString();
@@ -98,10 +100,11 @@ public class DataManager {
     }
 
     private JsonArray getJsonAccounts(Client client) {
-        JsonArray accountsArray = new JsonArray();
+        JsonArray accountsArray = new JsonArray();  // creates array for accounts a client has,
+        // then creates an Json object of accounts and its details to add it to the array
         for (Account account : client.getAccounts()) {
             JsonObject accountObject = new JsonObject();
-            accountObject.addProperty("type", getClientType(client));
+            accountObject.addProperty("accountType", getAccountType(account));
             accountObject.addProperty("accountNumber", account.getAccountNumber());
             accountObject.addProperty("balance", account.getBalance());
             accountsArray.add(accountObject);
@@ -121,32 +124,26 @@ public class DataManager {
         }
     }
     private void loadAccountsForClient(Client client, JsonArray accountsArray) {
-        for (JsonElement accountElement : accountsArray) {
-            JsonObject accountObject = accountElement.getAsJsonObject();
+        for (JsonElement accountArray : accountsArray) { // search through Array of accounts
+            JsonObject accountObject = accountArray.getAsJsonObject(); // turn Array into Json object
             String accountType = "";
-            if(accountObject.has("type")) {
-                    accountType = accountObject.get("type").getAsString();
-            }
-            else {
-                accountType = "Chequeing";
-            }
+
+            accountType = accountObject.get("accountType").getAsString();// gets account type
+
             String accountNumber = accountObject.get("accountNumber").getAsString();
             double balance = accountObject.get("balance").getAsDouble();
             Account account;
 
-            switch (accountType) {
+            switch (accountType) { //initializes account to its type
                 case "Investment":
                     account = new InvestmentAccount(accountNumber, balance, client);
                     break;
                 case "Savings":
                     account = new SavingAccount(accountNumber, balance, client);
                     break;
-                case "Chequeing":
                 default:
                     account = new ChequeingAccount(accountNumber, balance, client);
-                    break;
             }
-
             client.getAccounts().add(account);
         }
     }

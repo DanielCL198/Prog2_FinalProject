@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="545.0" prefWidth="706.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.bank.BankScene2Controller">
+<AnchorPane prefHeight="575.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.bank.BankScene2Controller">
    <Pane prefHeight="546.0" prefWidth="707.0">
       <children>
          <Button fx:id="CreateAccountButton" layoutX="105.0" layoutY="482.0" mnemonicParsing="false" onAction="#createAccount" text="Create Account" />
